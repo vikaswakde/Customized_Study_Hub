@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Borel&family=Dancing+Script&family=Fira+Sans:ital,wght@1,700&family=Roboto:wght@500&family=Ubuntu:wght@300&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Playfair+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway|Lato&display=swap" rel="stylesheet">
+
+
+
+
+    <link rel="stylesheet" href="/try-1/static/styles.css">
+
+    <!-- Jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+
+
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+
+    {% block title %}
+    <title>Your Hub</title>
+    {%endblock%}
+
+    <style>
+        * {
+            font-family: 'ubuntu',
+                cursive;
+        }
+
+        /* Font families */
+        .card {
+            font-family: 'Borel', cursive;
+            background-color: #f5f5f5;
+            /* Background color for the entire card */
+            border: 1px solid #ddd;
+            /* Add a subtle border */
+            border-radius: 10px;
+            /* Rounded corners */
+            padding: 20px;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            /* Slightly scale up on hover */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            /* Add a shadow on hover */
+            background-color: #fff;
+            /* Change background color on hover */
+        }
+
+        /* Title styling */
+        .card-title {
+            font-family: 'Raleway', cursive;
+            font-size: 25px;
+            /* Slightly smaller font size for the title */
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            /* Slightly reduce the margin */
+        }
+
+        /* Category styling */
+        .card-category {
+            font-family: 'Fira Sans', sans-serif;
+            color: #555;
+            /* Darker color for better readability */
+            font-size: 18px;
+            /* Larger font size for the category */
+            margin-bottom: 4px;
+            /* Reduce the margin to create a closer connection with the title */
+        }
+
+        /* Note styling */
+        .card-note {
+            font-family: 'Roboto', sans-serif;
+            color: #777;
+            /* Lighter color for better contrast */
+            font-size: 16px;
+            line-height: 1.6;
+            /* Slightly increase line height for better readability */
+            margin-bottom: 16px;
+            /* Adjust the margin to create proper spacing */
+        }
+
+
+        /* Button styling */
+        .delete-btn {
+            font-family: 'Ubuntu', sans-serif;
+            background-color: #dc3545;
+            color: #3c0404;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            position: absolute;
+            bottom: 20px;
+            /* Position the button at the bottom of the card */
+            right: 20px;
+            /* Position the button at the right of the card */
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        /* Card link */
+        .card-link {
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .card-link:hover {
+            color: #007bff;
+            /* Change link color on hover */
+        }
+
+
+        .create-for-yourself-header {
+            width: 100%;
+            height: 250px;
+
+            background: linear-gradient(360deg, #07eaff);
+            /* background-position: center; */
+            /* background-size: cover; */
+
+            color: rgb(0, 0, 0);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .community_favourite-header {
+            width: 100%;
+            height: 250px;
+
+            background: linear-gradient(180deg, #424242);
+            /* background-position: center; */
+            /* background-size: cover; */
+
+            color: #424242;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .create-for-yourself-header>button {
+            width: 200px;
+            height: 50px;
+
+            background-color: #ecc9c9;
+            color: rgb(42, 5, 5);
+
+            border-radius: 50px;
+            border: 1px solid rgb(37, 37, 35);
+
+            margin-top: 10px;
+        }
+
+        .community_favourite-header>button {
+            width: 200px;
+            height: 50px;
+
+            background-color: #d7d7d7;
+            color: rgb(0 0 0);
+
+            border-radius: 50px;
+            border: 1px solid rgb(86, 39, 39);
+
+            margin-top: 10px;
+        }
+
+        .create-for-yourself-header>button:hover {
+            border: 2px solid rgb(255, 0, 0);
+        }
+
+        .community_favourite-header>button:hover {
+            border: 2px solid rgb(30, 0, 255);
+        }
+
+
+        .mypost_create_for_yourself {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px rgb(79, 63, 63);
+
+            display: none;
+        }
+
+        .mypost_community_favourite {
+            width: 95%;
+            max-width: 500px;
+            margin: 20px auto 0px auto;
+            padding: 20px;
+            box-shadow: 0px 0px 3px 0px rgb(141, 121, 121);
+
+            display: none;
+        }
+
+        /* Style the close icon */
+        .close-icon {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            color: darkgoldenrod;
+            font-size: 10px;
+            cursor: pointer;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .close-icon:hover {
+            color: #ff0019;
+        }
+
+
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Apply a background color to the body */
+        body {
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Style the chat container */
+        .chat-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #70a597ff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        /* Style the chat header */
+        .chat-header {
+            background-color: #dadadaff;
+            color: #050101;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .chat-header img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .chat-header h1 {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Style chat messages */
+        .chat-messages {
+            padding: 10px;
+            overflow-y: scroll;
+            max-height: 300px;
+        }
+
+        .user-message {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .ai-message {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .message-content {
+            padding: 10px;
+            background-color: #dce4fc;
+            border-radius: 5px;
+            display: inline-block;
+            max-width: 70%;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style the chat input */
+        .chat-input {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #a7c8ff;
+            border-top: 1px solid #007498;
+        }
+
+        #questionInput {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #sendButton {
+            background-color: #f2f2f2;
+            color: #f766ff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        #sendButton:hover {
+            background-color: #000000;
+        }
+
+        
+
+
+
+    </style>
+
+
+</head>
+
+<body>
+    <!-- Navbar Section -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-md-top">
+        <div class="container">
+            <a href="/" class="navbar-brand">Your Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto">
+                    <!-- Add the following code for login, signup, and logout -->
+                    {% if current_user.is_authenticated %}
+                    <!-- User is logged in -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#learn" role="button"
+                            aria-expanded="false">Learn</a>
+                        <ul class="dropdown-menu bg-dark dropdown-menu-dark text-white">
+                            <li><a class="dropdown-item" href="#subjects">Subjects</a></li>
+                            <li><a class="dropdown-item" href="#leaders">Leaders</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#community_favourite">Community Favourites</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#create-for-yourself" class="nav-link">Create For Yourself</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#aiContainer">Ask AI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                    {% else %}
+                    <!-- User is not logged in -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup">Signup</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    {% block content %}
+    {% endblock %}
+
+
+
+
+
+
+
+
+    <!-- JavaScript function to handle form submission for Create Your Own section -->
+    <script>
+        function postingCreate() {
+            const videoUrl = document.getElementById('urlCreate').value;
+            const comment = document.getElementById('commentCreate').value;
+
+            // You can add your code here to create and display a new content card with the provided details.
+            // For example, append a new card to the "mycards" section with the video URL and comment.
+        }
+
+        // JavaScript function to handle closing the form for Create Your Own section
+        function close_boxCreate() {
+            // You can add your code here to close the form or reset form fields.
+        }
+    </script>
+
+    <!-- JavaScript function to show subject details -->
+    <script>
+        function showSubjectDetails(subjectName) {
+            // You can add your code here to display more details about the subject, e.g., a modal or a new page.
+            alert("Details for " + subjectName);
+        }
+    </script>
+
+    <!-- AI Script -->
+    <script>
+
+        // Example POST method implementation:
+        async function postData(url = "", data = {}) {
+            // Default options are marked with *
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            return response.json();
+        }
+
+        sendButton.addEventListener("click", async () => {
+            alert("hey you clicked")
+            questionInput = document.getElementById("questionInput").value;
+            // question = document.getElementById("question").value = "";
+
+
+            question.innerHTML = questionInput;
+
+            // Get the answer and poplulate it 
+            let result = await postData("/api", { "question": questionInput })
+
+            solution.innerHTML = result.result
+
+
+        })
+    </script>
+    {% if current_user.is_authenticated %}
+    <footer>
+        <div class="text-bg-light bg-danger-subtle text-sm-center fw-bold"><a class="nav-link" href="#topUp">Top</a>
+        </div>
+    </footer>
+    {% endif %}
+</body>
+
+</html>

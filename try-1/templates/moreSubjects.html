@@ -1,0 +1,43 @@
+{% extends "base.html"%}
+{% block content%}
+
+    <style>
+        body {
+            margin: 5px;
+            padding: 5px;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ url_for("static", filename="images/moreSubjects.jpg") }}'); 
+            
+            /* Replace 'background.jpg' with your background image file path */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            color: #00fffb;
+            text-align: center;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-bg-success">More Subjects Coming Soon</h1>
+        <p>Stay tuned for exciting updates!</p>
+    </div>
+
+
+{% endblock %}

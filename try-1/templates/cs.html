@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    {% for video in playlist_videos['items'] %}
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- YouTube Video Embed -->
+            <div class="embed-responsive embed-responsive-16by9 mb-4">
+                <iframe class="embed-responsive-item"
+                    src="https://www.youtube.com/embed/{{ video.snippet.resourceId.videoId }}" allowfullscreen></iframe>
+            </div>
+            <!-- Done Button -->
+            <button class="btn btn-primary mb-3 doneButton">Done</button>
+            <!-- Notes Textarea -->
+            <div class="mb-3">
+                <label for="notes{{ loop.index }}" class="form-label">Notes:</label>
+                <textarea class="form-control" id="notes{{ loop.index }}" rows="5"></textarea>
+            </div>
+            <!-- Save Button -->
+            <button class="btn btn-success saveButton">Save</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Circular Progress Bar (Top Right Corner) -->
+<div class="circular-progress">
+    <div class="progress-circle">
+        <div class="progress-circle-inner"></div>
+    </div>
+</div>
+
+<style>
+    /* Circular Progress Bar Styles */
+    .circular-progress {
+        position: fixed;
+        top: 100px;
+        /* Adjust the top distance as needed */
+        right: 20px;
+        /* Adjust the right distance as needed */
+        width: 192px;
+        /* Adjust the width and height to control the size of the circle */
+        height: 192px;
+        background-color: #fff;
+        /* Background color of the circle */
+        border-radius: 50%;
+        /* Create a circular shape */
+        border: 3px solid #007bff;
+        /* Border color and thickness */
+        overflow: hidden;
+        /* Hide overflowing content (progress circle) */
+    }
+
+    .progress-circle {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .progress-circle-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        /* Create a circular shape */
+        clip: rect(0px, 50px, 100px, 0px);
+        /* Clip half of the circle */
+        background-image: conic-gradient(black 0deg,
+                yellow 0deg 100%);
+        /* Progress bar color */
+        transform: rotate(90deg);
+        /* Start from the top (12 o'clock position) */
+        transform-origin: center;
+        /* Rotate around the center of the circle */
+        animation: progress-animation 0.8s linear forwards;
+    }
+
+    @keyframes progress-animation {
+        to {
+            transform: rotate(450deg);
+            /* Rotate to 450 degrees (full circle) */
+        }
+    }
+</style>
+
+<script>
+    // JavaScript code for handling the circular progress bar and buttons
+    const doneButtons = document.querySelectorAll('.doneButton');
+    const saveButtons = document.querySelectorAll('.saveButton');
+    const progressCircleInner = document.querySelector('.progress-circle-inner');
+    let totalVideos = doneButtons.length;
+    let completedVideos = 0;
+
+    function updateProgressBar() {
+        completedVideos++;
+        const progressValue = (completedVideos / totalVideos) * 360; // 360 degrees for a full circle
+        const progressBarGradient = `conic-gradient(
+            black 0deg,
+            yellow ${progressValue}deg,
+            black ${progressValue}deg 360deg
+        )`;
+        progressCircleInner.style.backgroundImage = progressBarGradient;
+    }
+
+
+    function saveNotes() {
+        // Add code to save notes here
+        // You can use JavaScript to send an AJAX request to your server to save the notes.
+    }
+
+    doneButtons.forEach(doneButton => {
+        doneButton.addEventListener('click', () => {
+            updateProgressBar();
+        });
+    });
+
+    saveButtons.forEach(saveButton => {
+        saveButton.addEventListener('click', () => {
+            saveNotes();
+        });
+    });
+
+
+
+</script>
+{% endblock %}

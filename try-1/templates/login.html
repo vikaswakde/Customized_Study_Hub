@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- <div class="card-wrapper">
+
+    <div class="card">
+
+        <h1 class="center">Login</h1>
+
+        <form name="signup_form" method="POST" , action="{{ url_for('login') }}">
+
+            <label for="username">Username</label>
+            <input type="text" name="username" class="field" required>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" class="field" required>
+
+
+
+            <button type="submit" class="btn">Login</button>
+
+        </form>
+        <p>Don't have an account? <a href="{{ url_for('signup') }}">Signup</a></p>
+    </div>
+</div> -->
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: 'poppins', 'sans-serif';
+    }
+
+    section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        width: 100%;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+        url('{{ url_for("static", filename="images/mountain2.jpg") }}')no-repeat;
+        background-position: center;
+        background-size: cover;
+    }
+
+    .form-box {
+        position: relative;
+        width: 400px;
+        height: 450px;
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h2 {
+        font-size: 2em;
+        color: #fff;
+        text-align: center;
+
+    }
+
+    .inputbox {
+        position: relative;
+        margin: 30px 0;
+        width: 310px;
+        border-bottom: 2px solid #fff;
+
+    }
+
+    .inputbox label {
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform: translateY(-50%);
+        color: #fff;
+        font-size: 1em;
+        pointer-events: none;
+        transition: top 0.5s ease-out
+    }
+
+    input:focus~label,
+    input:valid~label {
+        top: -5px;
+    }
+
+    .inputbox input {
+        width: 100%;
+        height: 50px;
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 1em;
+        padding: 0, 35px, 0, 5px;
+        color: #fff;
+
+    }
+
+    .inputbox ion-icon {
+        position: absolute;
+        right: 8px;
+        color: #fff;
+        font-size: 1.2em;
+        top: 20px;
+
+    }
+
+    .forget {
+        margin: -15px 0 15px;
+        font-size: .9em;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+    }
+
+    .forget label input {
+        margin-right: 3px;
+
+    }
+
+    .forget label a {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .forget lable a:hover {
+        text-decoration: underline;
+    }
+
+    .btn {
+        width: 100%;
+        height: 40px;
+        border-radius: 40px;
+        background: #fff;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+    }
+
+    .register {
+        font-size: .9em;
+        color: #fff;
+        margin: 25px 0 10px;
+    }
+
+    .register p a {
+        text-decoration: none;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .register p a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+
+<section>
+    <div class="form-box">
+        <div class="form-value">
+            <form name="signup_form" method="POST" , action="{{ url_for('login') }}">
+                <h2>Login</h2>
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="flash-messages text-light text-bg-danger">
+                    <ul>
+                        {% for message in messages %}
+                        <li class="flash-message">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                {% endwith %}
+                <!-- End Flash Messages -->
+
+                <div class="inputbox">
+                    <input type="username" name="username" id="username" required>
+                    <label for="username">Username</label>
+                </div>
+                <div class="inputbox">
+                    <input type="password" name="password" id="password" required>
+                    <label for="password">Password</label>
+                    <!-- <label for="password">Password</label>
+                    <input type="password" name="password" class="field" required> -->
+                </div>
+                <div class="forget">
+                </div>
+                <p class="error error--hidden"></p>
+                <button type="submit" class="btn">Login</button>
+            </form>
+            <div class="register">
+                <p>Don't have an account? <a href="{{ url_for('signup') }}">Signup</a></p>
+            </div>
+            <div class="forget">
+                <p>Forgot your password? <a href="{{ url_for('forgot_password') }}">Reset it</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+<script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+
+
+{% endblock %}

@@ -1,0 +1,759 @@
+{% extends "base.html" %}
+{%block title %}
+<title>Home</title>
+{%endblock%}
+
+{% block content %}
+
+<script>
+
+    let user_signed_in = false;
+
+
+    // Folder Section
+    $(document).ready(function () {
+        folder_listing();
+        community_listing();
+    });
+
+    // Folder Listing 
+    function folder_listing() {
+        $('#cards-box').empty()
+        $.ajax({
+            type: "GET",
+            url: "/folder",
+            data: {},
+            success: function (response) {
+                let rows = response['folder']
+                for (let i = 0; i < rows.length; i++) {
+                    let image = rows[i]['image']
+                    let title = rows[i]['title']
+                    let category = rows[i]['category']
+                    let note = rows[i]['note']
+                    let link = rows[i]['url']
+
+                    let temp_html = `
+<div class='col'>
+<div class='card h-100 p-3 border-0'>
+    <!-- Close button (Font Awesome icon) -->
+     <i class="fas fa-trash-alt fa-lg close-icon" onclick="removeCard(this)"></i>
+        <img src="${image}" class="card-image-top p-xl-3">
+            <a href="${link}" target="_blank" class="card-link">
+             <div class="card-body">
+                <h5 class="card-title m-2 fw-bold">${title}</h5>
+                  <p class='lead m-2'>Category: ${category}</p>
+                    <p class="m-2 fw-light">Note: ${note}</p>
+              </div>
+             </a>
+</div>
+</div>`
+
+                    $('#cards-box').append(temp_html)
+                }
+            }
+        })
+    }
+
+    // Community Listing Section
+    function community_listing() {
+        $('#community_cards_box').empty()
+        $.ajax({
+            type: "GET",
+            url: "/community",
+            data: {},
+            success: function (response) {
+                let rows = response['community']
+                for (let i = 0; i < rows.length; i++) {
+                    let image = rows[i]['image']
+                    let title = rows[i]['title']
+                    let category = rows[i]['category']
+                    let thoughts = rows[i]['thoughts']
+                    let link = rows[i]['url']
+                    let num = rows[i]['num']
+                    let done = rows[i]['done']
+
+                    let temp_html1 = ``
+                    if (done == 0) {
+
+                        temp_html1 = `<div class='col'>
+                                <div class='card h-100 p-3 border-0'>
+                                    <!-- Close button (Font Awesome icon) -->
+                                    <i class="fas fa-trash-alt fa-lg close-icon bg-danger" onclick="done_community_video(${num})"></i>
+                                    <img src="${image}" class="card-image-top p-xl-3">   
+                                    <a href="${link}" target="_blank" class="card-link">
+                                    <div class="card-body">
+                                        <h5 class="card-title m-2 fw-bold">${title}</h5>
+                                        <p class='lead m-2'>Category: ${category}</p>
+                                        <p class="m-2 fw-light">Note: ${thoughts}</p>
+                                    </div>
+                                    </a>
+                                </div>
+                        </div>`;
+
+
+                    }
+                    $('#community_cards_box').append(temp_html1)
+
+
+                }
+            }
+        })
+    }
+
+
+    // Folder Posting
+    function folder_posting() {
+        let url = $('#url_folder').val()
+        let category = $('#category').val()
+        let note = $('#note').val()
+
+        $.ajax({
+            type: "POST",
+            url: "/folder",
+            data: { url_give: url, category_give: category, note_give: note },
+            success: function (response) {
+                alert(response['msg'])
+                window.location.reload()
+            }
+        })
+    }
+
+    // Community Posting
+    function community_posting() {
+        let url = $('#url_community').val()
+        let category = $('#category_community').val()
+        let thoughts = $('#thoughts').val()
+
+        $.ajax({
+            type: "POST",
+            url: "/community",
+            data: { url_give: url, category_give: category, thoughts_give: thoughts },
+            success: function (response) {
+                alert(response['msg'])
+                window.location.reload()
+            }
+        })
+    }
+
+
+
+
+
+    // Open close Button Section 
+
+    function open_create_for_yourself() {
+        $('#create_for_yourself_post').show()
+    }
+
+    function open_community_favourite() {
+        $('#community_favourite_post').show()
+    }
+
+    // JavaScript function to handle closing the form for Create Your Own section
+    function close_create_for_yourself() {
+        // Add your code here to close the form for Create Your Own section
+        $('#create_for_yourself_post').hide()
+    }
+
+    function close_community_favourite() {
+        $('#community_favourite_post').hide()
+    }
+
+    // Video Marker Section
+    function done_community_video(num) {
+        $.ajax({
+            type: "POST",
+            url: "/video/done",
+            data: { 'num_give': num },
+            success: function (response) {
+                alert(response['msg'])
+                window.location.reload()
+            }
+        });
+    }
+
+    // Video Delete Section 
+    function delete_community_video(num) {
+        $.ajax({
+            type: "POST",
+            url: "/delete",
+            data: { num_give: num },
+            success: function (response) {
+                alert(response["msg"]);
+                window.location.reload();
+            }
+        });
+    }
+
+</script>
+
+
+<!-- Showcase Section -1  -->
+<section class="showcase-section text-center py-3" id="topUp">
+    <div class="container">
+        <div class="d-sm-flex align-items-center justify-content-between">
+            <div class="showcase-content">
+                <h1 class="showcase-title my-4">Track Your <span class="highlight">Progress</span></h1>
+                <p class="showcase-text">Track your progress, Never get distracted.
+                    <h3>Explore This and get Amazed</h3>
+                </p>
+            </div>
+            <img class="showcase-image img-fluid w-50 d-none d-sm-block"
+                src="{{ url_for('static', filename='images/track-your-progress.png') }}" alt="">
+        </div>
+    </div>
+</section>
+
+<!--  Showcase Customized Learning Section -2  -->
+<section class="customized-learning-section text-center py-3">
+    <div class="container">
+        <div class="d-sm-flex align-items-center justify-content-between">
+            <img class="customized-learning-image img-fluid w-50 d-none d-sm-block my-3"
+                src="{{ url_for('static', filename='images/customized-learning.png') }}" alt="">
+            <div class="customized-learning-content">
+                <h1 class="customized-learning-title my-4"><span class="highlight-danger">Customized
+                        Learning</span><span class=""> Each Subject</span></h1>
+                <p class="customized-learning-text text-secondary">STay Updated, and Learn Differnt Technology, Get realtime answers, Using<strong>GPT</strong>
+                <i>Stay Hungry Stay Foolish</i>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Subjects Section -->
+<section class="subjects-section p-5 text-center bg-white" id="subjects">
+    <div class="container">
+        <div class="subjects-header pb-xs text-center">
+            <h2 class="h-50-black text-black">Subjects</h2>
+        </div>
+
+        <div class="subjectCards pt-5">
+            <div class="row row-cols-1 row-cols-md-4 g-4" id="subjectCards">
+                <div class="col">
+                    <div class="card h-100 p-3 border-0">
+                        <img src="{{ url_for('static', filename='images/computer-science.png') }}"
+                            class="card-img-top p-xl-3">
+                        <div class="card-body">
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('cs') }}">
+                                <h5 class="card-title">Computer Science</h5>
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('signup') }}">
+                                <h5 class="card-title">Computer Science</h5>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 p-3 border-0">
+                        <img src="{{ url_for('static', filename='images/maths.png') }}" class="card-img-top">
+                        <div class="card-body">
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('maths') }}">
+                                <h5 class="card-title">Mathematics</h5>
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('signup') }}">
+                                <h5 class="card-title">Mathematics</h5>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 p-3 border-0">
+                        <img src="{{ url_for('static', filename='images/finance.png') }}" class="card-img-top">
+                        <div class="card-body">
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('fin') }}">
+                                <h5 class="card-title">Finance</h5>
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('signup') }}">
+                                <h5 class="card-title">Finance</h5>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card h-100 p-3 border-0">
+                        <img src="{{ url_for('static', filename='images/block.png') }}" class="card-img-top p-xl-3">
+                        <div class="card-body">
+                            {% if current_user.is_authenticated %}
+                            <a href="{{ url_for('block') }}">
+                                <h5 class="card-title">Blockchain</h5>
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('signup') }}">
+                                <h5 class="card-title">Blockchain</h5>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="subject-footer text-center fw-bolder">
+            <a href="{{ url_for('moreSubjects')}}">
+                <p class="m-5">See more</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Leaders Section -->
+<section class="leaders-section pt-5 text-center" id="leaders">
+    <div class="container ">
+        <div class="leaders-header text-center pb-xs fw-bolder">
+            <h2>Leaders</h2>
+        </div>
+        <div class="leader-grid pb-10">
+            <div class="leader-row row mt-5">
+                <div class="leader-card-section col-md-3 ">
+                    <div class="leader-card card shadow-lg my-2 h-100">
+                        <img src="https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/01/05/13/steve-jobs.jpg?quality=75&width=990&crop=3%3A2%2Csmart&auto=webp"
+                            alt="" class="leader-image img-fluid h-75">
+                        <div class="leader-card-body card-body text-center py-2">
+                            <p class="leader-title h4 card-title fw-bold">Steve Jobs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leader-card-section col-md-3">
+                    <div class="leader-card card shadow-lg my-2 h-100">
+                        <a href="https://www.youtube.com/playlist?list=PLVjG5W0Siam3j7ugKcTTSs1Aws9aqoL7i"> <img
+                                src="https://th.bing.com/th/id/OIP.exyYEJaL4fs7WMQcajcx8QHaFj?pid=ImgDet&rs=1" alt=""
+                                class="leader-image img-fluid h-auto"></a>
+                        <div class="leader-card-body card-body text-center py-2">
+                            <p class="leader-title h4 card-title fw-bold">Elon Musk</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leader-card-section col-md-3">
+                    <div class="leader-card card shadow-lg my-2 h-100">
+                        <img src="https://images.news18.com/ibnlive/uploads/2020/07/1596194290_mukesh-ambani.jpg" alt=""
+                            class="leader-image img-fluid h-75">
+                        <div class="leader-card-body card-body text-center py-2">
+                            <p class="leader-title h4 card-title fw-bold">Mukesh Ambani</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leader-card-section col-md-3">
+                    <div class="leader-card card shadow-lg my-2 h-100">
+                        <img src="https://img.etimg.com/photo/msid-77646775,quality-100/nikhil-kamath-zerodha.jpg"
+                            alt="" class="leader-image img-fluid h-auto">
+                        <div class="leader-card-body card-body text-center py-2">
+                            <p class="leader-title h4 card-title fw-bold">Nikhil Kamath</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="leader-footer text-center fw-bolder">
+            <a href="">
+                <p class="m-5">See more</p>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Community Favourite -->
+<section class="community_favourite_section  text-center pt-5" id="community_favourite">
+    <!-- <div class="container"> -->
+    <div class="community_favourite-header text-center fw-bolder m-3 mt-4 mb-3 create-community-section">
+        <h1>Community Favourites</h1>
+        <button onclick="open_community_favourite()">Click Me To Add</button>
+    </div>
+
+    <!-- Video Add Section -->
+    <div class="community_post">
+        <div id="community_favourite_post" class="mypost_community_favourite">
+            <div class="form-floating mb-3">
+                <input id="url_community" type="url" class="form-control" placeholder="youtube.com">
+                <label>Video URL</label>
+            </div>
+
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Category</label>
+                <select class="form-select" id="category_community">
+                    <option selected>-- Select a Category --</option>
+                    <option value="education">Education</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="news">News</option>
+                    <option value="sports">Sports</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+
+            <div class="form-floating">
+                <textarea id="thoughts" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                    style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Leave Your thoughts!</label>
+            </div>
+
+
+
+
+            <div class="create-for-yourself-btns text-center m-4">
+                <button onclick="community_posting()" type="button" class="btn btn-primary m-2">Save</button>
+                <button onclick="close_community_favourite()" type="button" class="btn btn-outline-dark">Close</button>
+            </div>
+        </div>
+
+    </div>
+    <!-- </div> -->
+
+    <!-- Display Card Section -->
+
+    <div class="community_favourite_cards">
+        <div class="container">
+            <div class="mycards pt-5">
+                <div class="row row-cols-1 row-cols-md-4 g-4" id="community_cards_box">
+
+                    <!-- Sample content card -->
+
+                </div>
+                <!-- Add more content cards here -->
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+<style>
+
+        a {
+          text-decoration: none;
+          color: inherit;
+        }
+</style>
+<!-- Create For Yourself Section -->
+<section class="create-for-yourself-section  text-center" id="create-for-yourself">
+    <!-- <div class="container"> -->
+    <div class="create-for-yourself-header text-center fw-bolder m-3 mt-4 mb-3 create-folder-section">
+        <h1>Create Your Folder</h1>
+        {% if current_user.is_authenticated %}
+        <button onclick="open_create_for_yourself()">Click Me To Add</button>
+        {% else %}
+        <button> <a class="click" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Dont Dare to touch if if not Logged In</a> </button>
+        {% endif %}
+    </div>
+
+    <!-- Video Add Section -->
+    <div class="create-for-yourself-post">
+        <div id="create_for_yourself_post" class="mypost_create_for_yourself">
+            <div class="form-floating mb-3">
+                <input id="url_folder" type="url" class="form-control" placeholder="youtube.com">
+                <label>Video URL</label>
+            </div>
+
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="inputGroupSelect01">Category</label>
+                <select class="form-select" id="category">
+                    <option selected>-- Select a Category --</option>
+                    <option value="education">Education</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="news">News</option>
+                    <option value="sports">Sports</option>
+                    <option value="others">Others</option>
+                </select>
+            </div>
+
+            <div class="form-floating">
+                <textarea id="note" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2"
+                    style="height: 100px"></textarea>
+                <label for="floatingTextarea2">Leave a note here!</label>
+            </div>
+
+
+
+
+            <div class="create-for-yourself-btns text-center m-4">
+                <button onclick="folder_posting()" type="button" class="btn btn-primary m-2">Save</button>
+                <button onclick="close_create_for_yourself()" type="button" class="btn btn-outline-dark">Close</button>
+            </div>
+        </div>
+
+    </div>
+    <!-- </div> -->
+
+    <!-- Display Card Section -->
+
+    <div class="create-for-yourself-cards">
+        <div class="container">
+            <div class="mycards pt-5">
+                <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
+
+                    <!-- Sample content card -->
+
+                </div>
+                <!-- Add more content cards here -->
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+
+
+<!-- AI Section -->
+<style>
+    /* Custom CSS for better layout */
+    .aiContainer {
+        width: 100%;
+        height: 100vh;
+        background: #3874c9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+    }
+
+    .chatbox {
+        background: #1d61c2;
+        width: 60%;
+        min-width: 25opx;
+        display: flex;
+
+    }
+
+    .col-1 {
+        flex: 1;
+    }
+
+    .col-1 {
+        flex-basis: 25px;
+        background: #3874c9;
+    }
+
+    .msg-row {
+        display: flex;
+        align-items: center;
+        margin: 40px;
+    }
+
+    .msg-text {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px 40px;
+        border-radius: 8px;
+        flex-basis: 70%;
+        font-weight: 300;
+    }
+
+    .msg-text h2 {
+        font-weight: 400px;
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .msg-img {
+        width: 50px;
+        border-radius: 50%;
+        margin: 0 20px;
+    }
+
+    .msg-row2 {
+        justify-content: space-around;
+    }
+
+    .col-1 input {
+        border: 0;
+        outline: none;
+        padding: 20px 40px;
+        background: #3874c9;
+        color: #fff;
+        width: 100%;
+        font-size: 16px;
+        font-weight: 300;
+        border: 2px solid transparent;
+        /* Set an initial transparent border */
+        transition: border-color 0.3s;
+        /* Add a transition for the border-color property */
+        animation: disco 2s;
+        /* Add a disco animation */
+    }
+
+    .col-1 input:hover {
+        animation: disco 2s infinite ease-in-out;
+        /* Add the disco animation only on hover */
+        border-color: azure;
+        border-radius: 30px;
+    }
+
+
+    ::placeholder {
+        color: #fff;
+    }
+
+
+
+
+
+    .chat-messages {
+        max-height: 400px;
+        /* Adjust max height as needed */
+        overflow-y: scroll;
+        /* Always show a hidden scrollbar */
+        scrollbar-width: none;
+        /* Hide scrollbar on Firefox */
+        -ms-overflow-style: none;
+        /* Hide scrollbar on IE/Edge */
+    }
+
+    /* Hide scrollbar on WebKit browsers (e.g., Chrome, Safari) */
+    .chat-messages::-webkit-scrollbar {
+        width: 0;
+        display: none;
+    }
+
+    .msg-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 10px 0;
+        /* Adjust margin spacing between messages */
+    }
+
+    .send-icon {
+        font-size: 18px;
+        cursor: pointer;
+        margin: -68px;
+        color: #fff;
+    }
+
+    /* To make the icon and input appear on the same line */
+    .input-container {
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+<div class="aiContainer" id="aiContainer">
+    <div class="chatbox">
+        <div class="col-1">
+            <div class="chat-messages" id="chat-messages">
+                <!-- User message -->
+                <div class="msg-row">
+                    <div class="msg-text">
+                        <h2>Your GPT</h2>
+                        <p>Hello How Can I help You? </p>
+                    </div>
+                    <img src="{{ url_for('static', filename='images/ai_image.png') }}" class="msg-img" alt="">
+                </div>
+
+                <!-- AI message (This section will be updated dynamically) -->
+            </div>
+
+            <div class="input-container">
+                {% if current_user.is_authenticated %}
+                <input type="text" id="user_question" placeholder="Ask your Question here... "
+                    onkeypress="handleKeyPress(event)">
+                <i id="send-icon" class="far fa-paper-plane send-icon" onclick="ai()"></i>
+                {% else %}
+                <input type="text" id="user_question" placeholder="Ask your Question here... ">
+                <i id="send-icon" class="far fa-paper-plane send-icon" onclick="notai()"></i>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // User Not Logged In!!
+    function notai() {
+        let message = "Bro First You have to Create An Account or Login to Use Me!🙂"
+        $('#user_question').val(''); // Clear the input field
+        const userMessage = `
+            <div class="msg-row">
+                <div class="msg-text">
+                    <h2>User</h2>
+                    <p>${message}</p>
+                    <img src="{{url_for('static', filename='images/ailogin.jpeg')}}">
+                </div>
+                <img src="{{ url_for('static', filename='images/ai_image.png') }}" class="msg-img" alt="">
+            </div>
+        `;
+        // Append user message to chat container
+        $('#chat-messages').append(userMessage);
+        scrollToBottom();
+    }
+
+    // User Logged In !!
+    function ai() {
+        let message = $('#user_question').val();
+        $('#user_question').val(''); // Clear the input field
+
+        // Create user message element
+        const userMessage = `
+            <div class="msg-row">
+                <div class="msg-text">
+                    <h2>User</h2>
+                    <p>${message}</p>
+                </div>
+                <img src="{{ url_for('static', filename='images/user_image.png') }}" class="msg-img" alt="">
+            </div>
+        `;
+        // Append user message to chat container
+        $('#chat-messages').append(userMessage);
+
+        // Scroll to the bottom of the chat container
+        scrollToBottom();
+
+        $.ajax({
+            type: "POST",
+            url: "/aim",
+            data: { message_give: message },
+            success: function (response) {
+                // Create AI message element
+                const aiMessage = `
+                    <div class="msg-row">
+                        <img src="{{ url_for('static', filename='images/ai_image.png') }}" class="msg-img" alt="">
+                        <div class="msg-text">
+                            <h2>GPT AI</h2>
+                            <p class="gpt_answer">${response['msg']}</p>
+                        </div>
+                    </div>
+                `;
+
+                // Append AI message to chat container
+                $('#chat-messages').append(aiMessage);
+
+                // Scroll to the bottom of the chat container
+                scrollToBottom();
+            }
+        });
+    }
+
+    // Function to scroll to the bottom of the chat container
+    function scrollToBottom() {
+        const chatContainer = document.getElementById('chat-messages');
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            ai(); // Call the ai() function when Enter is pressed
+        }
+    }
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+{% endblock %}
